@@ -1,0 +1,24 @@
+# Write down your multi-threading designs here!
+
+In run_sim I plan to have a for loop going through all passengers and making a passenger thread for each passenger
+Next loop going through all trains and making a train thread for each train
+Next loop going through all passenger threads and calling join on each of them
+Next loop going through all train threads and calling interrupt on all of them(each will be wrapped in a try catch block where the catch will just return)
+
+Each station will have its own lock and conditional
+
+In Train thread I plan on having a big while loop that keeps the train thread moving until an interrupt is called
+from there I'll check if train is moving forwards or backwards and go to appropriate instructions from there(practically identical instructions)
+from there try to get the current station lock and next station lock
+then enter while loop that awaits, until next train station has no train in it
+once next station opens up make train move in mbta and log the event
+signal all then release locks then sleep for 500ms
+repeat while loop until interupt is called later on
+
+In Passenger thread I plan on having a big while loop that keeps the passenger thread going until it has reached its final destination
+then check if the passenger is on a train or just at a station and go to appropriate instructions from there
+if in the on station, we get the station lock then start a while loop that awaits until a train has entered the station
+next check if that train has the passengers next stop on it and board if so then release lock
+if in the on train, we get the passengers next stop lock and then enter a while loop that awaits until the passenger is at its next stop
+once at next stop deboard release lock
+repeat while loop until passenger is at destination
